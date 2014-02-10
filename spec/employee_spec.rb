@@ -63,4 +63,32 @@ describe Employee do
       it { should == 'Bob' }
     end
   end
+  
+  describe "#age" do
+    subject { Employee.new(:dob => dob).age }
+    
+    before do
+      today = Date.parse('2014-01-01')
+      Date.stub(:today).and_return(today)
+    end
+    
+    describe "when dob is properly set" do
+      let(:dob) { '1977-04-29' }
+      
+      it { should be_a(Fixnum) }
+      it { should == 36 }
+    end
+    
+    describe "when birthday is today" do
+      let(:dob) { '1977-01-01' }
+      
+      it { should be_a(Fixnum) }
+      it { should = 37 }
+    end
+    
+    describe "when dob is not set" do
+      let(:dob) { nil }
+      it { should be_nil }
+    end
+  end
 end
