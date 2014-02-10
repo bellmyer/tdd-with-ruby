@@ -23,6 +23,7 @@ class Employee
   end
   
   def age
+    return @age if defined?(@age)
     return nil if dob.nil?
     
     today = Date.today
@@ -30,6 +31,6 @@ class Employee
     years = today.year - dob.year
     years -= 1 if today.yday < dob.yday
     
-    years
+    @age = years
   end
 end

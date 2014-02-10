@@ -90,5 +90,18 @@ describe Employee do
       let(:dob) { nil }
       it { should be_nil }
     end
+    
+    describe "when method is called repeatedly" do
+      let(:dob) { '1977-04-29' }
+      
+      it "calculates only once" do
+        today = Date.parse('2014-01-01')
+        Date.should_receive(:today).once.and_return(today)
+        
+        employee = Employee.new(:dob => dob)
+        
+        3.times { employee.age }
+      end
+    end
   end
 end
