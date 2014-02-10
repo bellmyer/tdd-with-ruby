@@ -1,1 +1,1 @@
-rvm use ruby-2.0.0-p353@tdd_with_ruby
+rvm use ruby-2.0.0-p353@tdd_with_ruby_autotest
