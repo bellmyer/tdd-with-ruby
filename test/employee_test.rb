@@ -1,57 +1,58 @@
 require_relative "../lib/employee"
 
-def describe label
+def describe label, subject
   @label = label
+  @subject = subject
+  
   yield
 end
 
-def assert message
+def assert condition, expected_result
   employee = Employee.new
-  raise "\n\n#{@label} #{message}" unless yield(employee)
   
-  $stdout.print '.'; $stdout.flush
+  yield(employee)
+  actual_result = @subject.call(employee)
+  
+  if actual_result == expected_result
+    $stdout.print '.'
+    $stdout.flush
+  else
+    raise "\n\n#{condition}: #{@label} should be #{expected_result}, but was #{actual_result}"
+  end
 end
 
-describe "#male?" do
-  assert "should be true when gender is 'M'" do |employee|
+describe("#male?", lambda{|e| e.male?}) do
+  assert("when gender is 'M'", true) do |employee|
     employee.gender = 'M'
-    employee.male?
   end
 
-  assert "should be false when gender is 'F'" do |employee|
+  assert("when gender is 'F'", false) do |employee|
     employee.gender = 'F'
-    !employee.male?
   end
 end
 
-describe "#female?" do
-  assert "should be false when gender is 'M'" do |employee|
+describe("#female?", lambda{|e| e.female?}) do
+  assert("when gender is 'M'", false) do |employee|
     employee.gender = 'M'
-    !employee.female?
   end
 
-  assert "should be true when gender is 'F'" do |employee|
+  assert("when gender is 'F'", true) do |employee|
     employee.gender = 'F'
-    employee.female?
   end
 end
 
-describe "#full_name" do
-  assert "should combine first and last name" do |employee| 
+describe("#full_name", lambda{|e| e.full_name}) do
+  assert("when first and last name are specified", 'Bob Smith') do |employee| 
     employee.first_name = 'Bob'
     employee.last_name = 'Smith'
-  
-    employee.full_name == 'Bob Smith'
   end
 
-  assert "should only use first when last is unavailable" do |employee|
+  assert("when last name is unavailable", 'Bob') do |employee|
     employee.first_name = 'Bob'
-    employee.full_name == 'Bob'
   end
 
-  assert "should only use last when first is unavailable" do |employee|
+  assert("when first name is unavailable", 'Smith') do |employee|
     employee.last_name = 'Smith'
-    employee.full_name == 'Smith'
   end
 end
 
